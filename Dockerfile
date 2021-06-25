@@ -1,9 +1,9 @@
-FROM alpine:3.7
-
-MAINTAINER Tommy Lau <tommy@gen-new.com>
+FROM alpine:3.7 AS build-env
 
 ENV OC_VERSION=0.12.1
 
+## build ocserv and install it to $DESTDIR 
+## calculate runtime dependencies and save it to $DESTDIR/runtime.deps
 RUN buildDeps=" \
 		curl \
 		g++ \
@@ -26,24 +26,26 @@ RUN buildDeps=" \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz.sig" -o ocserv.tar.xz.sig \
 	&& mkdir -p /usr/src/ocserv \
 	&& tar -xf ocserv.tar.xz -C /usr/src/ocserv --strip-components=1 \
-	&& rm ocserv.tar.xz* \
 	&& cd /usr/src/ocserv \
 	&& ./configure \
 	&& make \
+	&& export DESTDIR=/app/build/ \
 	&& make install \
-	&& mkdir -p /app/ocserv \
-	&& cp /usr/src/ocserv/doc/sample.config /app/ocserv/ocserv.conf \
-	&& cd / \
-	&& rm -fr /usr/src/ocserv \
 	&& runDeps="$( \
-		scanelf --needed --nobanner /usr/local/sbin/ocserv \
+		scanelf --needed --nobanner $DESTDIR/usr/local/sbin/ocserv \
 			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
 			| xargs -r apk info --installed \
 			| sort -u \
-		)" \
-	&& apk add --virtual .run-deps $runDeps gnutls-utils iptables libnl3 readline \
-	&& apk del .build-deps \
-	&& rm -rf /var/cache/apk/*
+		)" \ 
+	&& echo $runDeps > $DESTDIR/runtime.deps
+
+
+
+FROM alpine:3.7
+COPY --from=build-env /app/build/  /
+COPY --from=build-env /usr/src/ocserv/doc/sample.config  /app/ocserv/ocserv.conf
+
+RUN	apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline
 
 # Setup config
 COPY groupinfo.txt /app/ocserv/
@@ -56,6 +58,5 @@ ENTRYPOINT ["/start.sh"]
 
 EXPOSE 443
 CMD ["ocserv", "-c", "/etc/ocserv/ocserv.conf", "-f"]
-
 
 
