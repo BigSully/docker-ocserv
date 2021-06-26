@@ -4,8 +4,8 @@ cp -r /app/ocserv/  /etc/
 
 cat /app/cn-no-route.txt  > /etc/ocserv/config-per-group/Route
 
-#sed -i 's/^#\(connect-script = \).*/\1\/etc\/ocserv\/connect.sh/'  /etc/ocserv/ocserv.conf
-#sed -i 's/^#\(disconnect-script = \).*/\1\/etc\/ocserv\/disconnect.sh/'  /etc/ocserv/ocserv.conf
+sed -i 's/^#\(connect-script = \).*/\1\/etc\/ocserv\/connect.sh/'  /etc/ocserv/ocserv.conf
+sed -i 's/^#\(disconnect-script = \).*/\1\/etc\/ocserv\/disconnect.sh/'  /etc/ocserv/ocserv.conf
 
 
 ## ip rannge and dns
