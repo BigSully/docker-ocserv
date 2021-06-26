@@ -44,19 +44,16 @@ RUN buildDeps=" \
 FROM alpine:3.7
 COPY --from=build-env /app/build/  /
 COPY --from=build-env /usr/src/ocserv/doc/sample.config  /app/ocserv/ocserv.conf
+# Setup some config
+COPY ocserv/  /app/ocserv/	
+COPY cn-no-route.txt /app/
 
-RUN	apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline
-
-# Setup config
-COPY groupinfo.txt /app/ocserv/
-COPY All /app/ocserv/config-per-group/All
-COPY cn-no-route.txt /app/ocserv/config-per-group/Route
-
-COPY start.sh /start.sh
-
-ENTRYPOINT ["/start.sh"]
+RUN apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline
 
 EXPOSE 443
-CMD ["ocserv", "-c", "/etc/ocserv/ocserv.conf", "-f"]
+COPY init.sh /app/init.sh
+COPY start.sh /app/start.sh
+RUN chmod 755 /app/start.sh
+CMD ["/app/start.sh"]
 
 
