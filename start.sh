@@ -17,5 +17,5 @@ mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
 
 # Run OpennConnect Server
-ocserv -f -c /etc/ocserv/ocserv.conf
+ocserv -f -d 2 -c /etc/ocserv/ocserv.conf
 
