@@ -46,7 +46,6 @@ COPY --from=build-env /app/build/  /
 COPY --from=build-env /usr/src/ocserv/doc/sample.config  /app/ocserv/ocserv.conf
 # Setup some config
 COPY ocserv/  /app/ocserv/	
-COPY cn-no-route.txt /app/
 
 RUN apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline
 
