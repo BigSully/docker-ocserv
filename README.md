@@ -1,4 +1,22 @@
 
+## make sure to always route dns, otherwise you'll be damned by GFW pollution.
+# check the dns currently in use
+scutil --dns | grep nameserver
+cat /etc/resolv.conf
+# check whether the dns is routed through the vpn tunnel
+route -n get 1.1.1.1
+
+
+## Try other group like all, all-local if you cannot determine the cause of failure
+
+
+# route rules and no-route rules might appear both in ocserv.conf and group rules, which one will take effects is undefined!
+# determine the route with route -n get xxx.xxx.xxx.xxx if you're not sure.
+
+
+
+
+
 
 
 
