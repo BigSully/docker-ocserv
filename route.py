@@ -6,7 +6,7 @@ import glob
 import socket
 import xml.etree.ElementTree
 import urllib2
-
+import traceback
 
 def get_netmask(mask):
     bits = 0
@@ -57,21 +57,28 @@ if __name__ == "__main__":
                 domain = line.strip()
 
                 if len(domain) != 0 and domain[0] != '#':
-                    print("  Processing domain [%s] " % domain),
-                    ip = socket.gethostbyname(domain)
-                    print("IP: %s" % ip),
-                    decimal_ip = get_decimal_ip(ip)
-                    exist = False
-                    for t in route_table:
-                        if (get_decimal_ip(route_table[t][1]) & decimal_ip) == t:
-                            exist = True
-                            break
-                    if exist:
-                        print "exist, skip . . ."
-                    else:
-                        addr, mask = query_cidr(ip)
-                        route_table[get_decimal_ip(addr)] = (addr, mask)
-                        print("CIDR: %s/%s" % (addr, mask))
+                    try:
+                        print("  Processing domain [%s] " % domain),
+                        ip = socket.gethostbyname(domain)
+                        print("IP: %s" % ip),
+                        decimal_ip = get_decimal_ip(ip)
+                        exist = False
+                        for t in route_table:
+                            if (get_decimal_ip(route_table[t][1]) & decimal_ip) == t:
+                                exist = True
+                                break
+                        if exist:
+                            print
+                            "exist, skip . . ."
+                        else:
+                            addr, mask = query_cidr(ip)
+                            route_table[get_decimal_ip(addr)] = (addr, mask)
+                            print("CIDR: %s/%s" % (addr, mask))
+                    except:
+                        errMsg = traceback.format_exc()
+                        print('failed to resolve domain: {}, error: {}'.format(domain, errMsg))
+
+
 
     tables = sorted(route_table.items())
 
