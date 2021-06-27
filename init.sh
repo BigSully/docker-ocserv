@@ -17,6 +17,11 @@ sed -i 's/^route/#route/' /etc/ocserv/ocserv.conf
 sed -i 's/^no-route/#no-route/' /etc/ocserv/ocserv.conf
 
 
+## group and user config
+sed -i 's/^#\(auto-select-group\)/\1/' /etc/ocserv/ocserv.conf
+sed -i 's/^#\(config-per-group\)/\1/' /etc/ocserv/ocserv.conf
+sed -i 's/^#\(config-per-user\)/\1/' /etc/ocserv/ocserv.conf
+
 set -x \
 	&& sed -i 's/\.\/sample\.passwd/\/etc\/ocserv\/ocpasswd/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/\(max-same-clients = \)2/\110/' /etc/ocserv/ocserv.conf \
@@ -24,14 +29,7 @@ set -x \
 	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/\[vhost:www.example.com\]/,$d' /etc/ocserv/ocserv.conf
 
-# group config
-cat <<EOF >> /etc/ocserv/ocserv.conf
-#default-select-group = all-cn
-#select-group = all
-#select-group = all-local
-auto-select-group = true
-config-per-group = /etc/ocserv/config-per-group/
-EOF
+
 
 if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-cert.pem ]; then
 	# Check environment variables
