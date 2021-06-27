@@ -18,7 +18,6 @@ sed -i 's/^no-route/#no-route/' /etc/ocserv/ocserv.conf
 
 
 ## group and user config
-sed -i 's/^#\(auto-select-group\)/\1/' /etc/ocserv/ocserv.conf
 sed -i 's/^#\(config-per-group\)/\1/' /etc/ocserv/ocserv.conf
 sed -i 's/^#\(config-per-user\)/\1/' /etc/ocserv/ocserv.conf
 
