@@ -9,8 +9,10 @@ sed -i 's/^#\(disconnect-script = \).*/\1\/etc\/ocserv\/disconnect.sh/'  /etc/oc
 
 
 ## ip rannge and dns
-#sed -i 's/^ipv4-network = 192.168.1.0/#\0\nipv4-network = 172.16.73.0/' /etc/ocserv/ocserv.conf
-#sed -i 's/^dns = 192.168.1.2/#\1\ndns = 1.1.1.1\ndns = 1.0.0.1/' /etc/ocserv/ocserv.conf
+sed -i 's/^ipv4-network = 192.168.1.0/#\0\nipv4-network = 172.16.73.0/' /etc/ocserv/ocserv.conf
+sed -i 's/^dns = 192.168.1.2/#\1\ndns = 8.8.8.8\ndns = 8.8.4.4/' /etc/ocserv/ocserv.conf
+# sed -i 's/^dns = 192.168.1.2/#\1\ndns = 1.1.1.1\ndns = 1.0.0.1/' /etc/ocserv/ocserv.conf
+
 
 ## clear all routing rules
 sed -i 's/^route/#route/' /etc/ocserv/ocserv.conf
@@ -21,8 +23,6 @@ set -x \
 	&& sed -i 's/\(max-same-clients = \)2/\110/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/\.\.\/tests/\/etc\/ocserv/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
-	&& sed -i '/^ipv4-network = /{s/192.168.1.0/192.168.99.0/}' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/\[vhost:www.example.com\]/,$d' /etc/ocserv/ocserv.conf
 
 # group config
