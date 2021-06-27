@@ -2,21 +2,20 @@
 
 cp -r /app/ocserv/  /etc/
 
-cat /app/cn-no-route.txt  > /etc/ocserv/config-per-group/Route
-
 sed -i 's/^#\(connect-script = \).*/\1\/etc\/ocserv\/connect.sh/'  /etc/ocserv/ocserv.conf
 sed -i 's/^#\(disconnect-script = \).*/\1\/etc\/ocserv\/disconnect.sh/'  /etc/ocserv/ocserv.conf
 
 
 ## ip rannge and dns
 sed -i 's/^ipv4-network = 192.168.1.0/#\0\nipv4-network = 172.16.73.0/' /etc/ocserv/ocserv.conf
-sed -i 's/^dns = 192.168.1.2/#\1\ndns = 8.8.8.8\ndns = 8.8.4.4/' /etc/ocserv/ocserv.conf
-# sed -i 's/^dns = 192.168.1.2/#\1\ndns = 1.1.1.1\ndns = 1.0.0.1/' /etc/ocserv/ocserv.conf
+sed -i 's/^dns = 192.168.1.2/#\1\ndns = 1.1.1.1\ndns = 1.0.0.1/' /etc/ocserv/ocserv.conf
+#sed -i 's/^dns = 192.168.1.2/#\1\ndns = 8.8.8.8\ndns = 8.8.4.4/' /etc/ocserv/ocserv.conf
 
 
 ## clear all routing rules
 sed -i 's/^route/#route/' /etc/ocserv/ocserv.conf
 sed -i 's/^no-route/#no-route/' /etc/ocserv/ocserv.conf
+
 
 set -x \
 	&& sed -i 's/\.\/sample\.passwd/\/etc\/ocserv\/ocpasswd/' /etc/ocserv/ocserv.conf \
@@ -27,10 +26,11 @@ set -x \
 
 # group config
 cat <<EOF >> /etc/ocserv/ocserv.conf
-default-select-group = Route[仅海外代理 Exclude CN]
-select-group = All[全局代理 All Proxy]
-auto-select-group = false
-config-per-group = /etc/ocserv/config-per-group
+#default-select-group = all-cn
+#select-group = all
+#select-group = all-local
+auto-select-group = true
+config-per-group = /etc/ocserv/config-per-group/
 EOF
 
 if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-cert.pem ]; then
