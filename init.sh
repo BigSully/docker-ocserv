@@ -28,6 +28,12 @@ set -x \
 	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/\[vhost:www.example.com\]/,$d' /etc/ocserv/ocserv.conf
 
+## generating vhost - vhost sections must be put in the end of the ocserv.conf file
+echo "generating vhost..."
+vhost=oc192.${VHOST_BASE} device=vpns192 ip=192.168.2.0 envsubst '$vhost $device $ip' < /etc/ocserv/vhost-template.conf >> /etc/ocserv/ocserv.conf
+vhost=oc172.${VHOST_BASE} device=vpns172 ip=172.31.31.0 envsubst '$vhost $device $ip' < /etc/ocserv/vhost-template.conf >> /etc/ocserv/ocserv.conf
+vhost=oc10.${VHOST_BASE} device=vpns10 ip=10.10.10.0 envsubst '$vhost $device $ip' < /etc/ocserv/vhost-template.conf >> /etc/ocserv/ocserv.conf
+
 
 
 if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-cert.pem ]; then

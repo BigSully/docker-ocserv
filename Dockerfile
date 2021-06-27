@@ -46,8 +46,9 @@ COPY --from=build-env /app/build/  /
 COPY --from=build-env /usr/src/ocserv/doc/sample.config  /app/ocserv/ocserv.conf
 # Setup some config
 COPY ocserv/  /app/ocserv/	
+COPY vhost-template.conf  /app/ocserv/
 
-RUN apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline
+RUN apk add --no-cache --virtual .run-deps `cat /runtime.deps` gnutls-utils iptables libnl3 readline gettext libintl
 
 EXPOSE 443
 COPY init.sh /app/init.sh

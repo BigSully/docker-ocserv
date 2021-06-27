@@ -1,4 +1,9 @@
 
+# Usage:
+docker run -v $HOME/config-test:/etc/ocserv/ --privileged -p 443:443 -p 443:443/udp -e CA_CN="My CA" -e CA_ORG="My Corp" -e CA_DAYS=3650 -e SRV_CN=example.com -e SRV_ORG="My Test" -e SRV_DAYS=365 -e VHOST_BASE=example.com  -d  ocserv
+
+
+
 ## make sure to always route dns, otherwise you'll be damned by GFW pollution.
 # check the dns currently in use
 scutil --dns | grep nameserver
